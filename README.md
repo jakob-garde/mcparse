@@ -74,7 +74,7 @@ mentioned above, and can thus be easilly ported to other projects, be that for o
 testing, porting or component- or tool development purposes.
 
 In combination With the <code>simlib.h</code> and <code>simcore.h</code> source files
-(given elsewhere), which include the mcstas runtime simulation code and 
+(found in the <code>mctrace</code> project linked above), which include the mcstas runtime simulation code and 
 helper libraries, the code-generated .h files enables an accessible debugging- and development
 environment for McStas simualtions, which was previously unheard-of.
 
