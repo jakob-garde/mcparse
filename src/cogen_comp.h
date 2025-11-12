@@ -139,6 +139,24 @@ void CogenComponent(StrBuff *b, ComponentParse *comp) {
     StrBuffPrint1K(b, "    return _comp;\n", 0);
     StrBuffPrint1K(b, "}\n\n", 0);
 
+    StrBuffPrint1K(b, "int GetParameterCount_%.*s() {\n", 2, comp->type.len, comp->type.str);
+    StrBuffPrint1K(b, "    return %u;\n", 1, comp->setting_params.len);
+    StrBuffPrint1K(b, "}\n\n", 0);
+
+    StrBuffPrint1K(b, "void GetParameters_%.*s(Array<CompPar> *pars, %.*s *comp) {\n", 4, comp->type.len, comp->type.str, comp->type.len, comp->type.str);
+    for (s32 j = 0; j < comp->setting_params.len; ++j) {
+        Parameter p = comp->setting_params.arr[j];
+
+        if (StrEqual(p.type, "string")) {
+            StrBuffPrint1K(b, "    pars->Add( CompPar { CPT_STRING, \"%.*s\", comp->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
+        }
+        else {
+            StrBuffPrint1K(b, "    pars->Add( CompPar { CPT_FLOAT, \"%.*s\", &comp->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
+        }
+        // TODO: vectors
+    }
+    StrBuffPrint1K(b, "}\n\n", 0);
+
     //
     //  Init
 
@@ -336,6 +354,10 @@ void CogenComponentMeta(StrBuff *b, HashMap *components) {
         StrBuffPrint1K(b, "            comp->type_name = StrLS(comp_spec.type);\n", 0);
         StrBuffPrint1K(b, "            comp->name = StrLS(comp_spec.name);\n", 0);
         StrBuffPrint1K(b, "            comp->cat = CCAT_%.*s;\n", 2, comp->category.len, comp->category.str);
+        StrBuffPrint1K(b, "            comp->interactable = true;\n", 0);
+        StrBuffPrint1K(b, "\n", 0);
+        StrBuffPrint1K(b, "            comp->parameters = InitArray<CompPar>(a_dest, GetParameterCount_%.*s());\n", 2, comp->type.len, comp->type.str);
+        StrBuffPrint1K(b, "            GetParameters_%.*s(&comp->parameters, &comp_spec);\n", 2, comp->type.len, comp->type.str);
         StrBuffPrint1K(b, "        } break;\n", 0);
         StrBuffPrint1K(b, "\n", 0);
     }

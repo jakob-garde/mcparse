@@ -43,6 +43,24 @@ PSDlin_monitor Create_PSDlin_monitor(s32 index, char *name) {
     return _comp;
 }
 
+int GetParameterCount_PSDlin_monitor() {
+    return 11;
+}
+
+void GetParameters_PSDlin_monitor(Array<CompPar> *pars, PSDlin_monitor *comp) {
+    pars->Add( CompPar { CPT_FLOAT, "nbins", &comp->nbins } );
+    pars->Add( CompPar { CPT_STRING, "filename", comp->filename } );
+    pars->Add( CompPar { CPT_FLOAT, "xmin", &comp->xmin } );
+    pars->Add( CompPar { CPT_FLOAT, "xmax", &comp->xmax } );
+    pars->Add( CompPar { CPT_FLOAT, "ymin", &comp->ymin } );
+    pars->Add( CompPar { CPT_FLOAT, "ymax", &comp->ymax } );
+    pars->Add( CompPar { CPT_FLOAT, "nowritefile", &comp->nowritefile } );
+    pars->Add( CompPar { CPT_FLOAT, "xwidth", &comp->xwidth } );
+    pars->Add( CompPar { CPT_FLOAT, "yheight", &comp->yheight } );
+    pars->Add( CompPar { CPT_FLOAT, "restore_neutron", &comp->restore_neutron } );
+    pars->Add( CompPar { CPT_FLOAT, "vertical", &comp->vertical } );
+}
+
 void Init_PSDlin_monitor(PSDlin_monitor *comp, Instrument *instrument) {
 
     #define nbins comp->nbins

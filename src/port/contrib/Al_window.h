@@ -51,6 +51,14 @@ Al_window Create_Al_window(s32 index, char *name) {
     return _comp;
 }
 
+int GetParameterCount_Al_window() {
+    return 1;
+}
+
+void GetParameters_Al_window(Array<CompPar> *pars, Al_window *comp) {
+    pars->Add( CompPar { CPT_FLOAT, "thickness", &comp->thickness } );
+}
+
 void Init_Al_window(Al_window *comp, Instrument *instrument) {
 
 }

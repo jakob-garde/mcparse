@@ -38,6 +38,17 @@ Progress_bar Create_Progress_bar(s32 index, char *name) {
     return _comp;
 }
 
+int GetParameterCount_Progress_bar() {
+    return 4;
+}
+
+void GetParameters_Progress_bar(Array<CompPar> *pars, Progress_bar *comp) {
+    pars->Add( CompPar { CPT_STRING, "profile", comp->profile } );
+    pars->Add( CompPar { CPT_FLOAT, "percent", &comp->percent } );
+    pars->Add( CompPar { CPT_FLOAT, "flag_save", &comp->flag_save } );
+    pars->Add( CompPar { CPT_FLOAT, "minutes", &comp->minutes } );
+}
+
 void Init_Progress_bar(Progress_bar *comp, Instrument *instrument) {
 
     #define profile comp->profile
