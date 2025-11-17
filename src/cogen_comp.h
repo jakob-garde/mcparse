@@ -357,7 +357,7 @@ void CogenComponentMeta(StrBuff *b, HashMap *components) {
         StrBuffPrint1K(b, "            comp->interactable = true;\n", 0);
         StrBuffPrint1K(b, "\n", 0);
         StrBuffPrint1K(b, "            comp->parameters = InitArray<CompPar>(a_dest, GetParameterCount_%.*s());\n", 2, comp->type.len, comp->type.str);
-        StrBuffPrint1K(b, "            GetParameters_%.*s(&comp->parameters, &comp_spec);\n", 2, comp->type.len, comp->type.str);
+        StrBuffPrint1K(b, "            GetParameters_%.*s(&comp->parameters, (%.*s*) comp->comp);\n", 4, comp->type.len, comp->type.str, comp->type.len, comp->type.str);
         StrBuffPrint1K(b, "        } break;\n", 0);
         StrBuffPrint1K(b, "\n", 0);
     }
