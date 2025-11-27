@@ -50,6 +50,20 @@ Slit Create_Slit(s32 index, char *name) {
     return _comp;
 }
 
+int GetParameterCount_Slit() {
+    return 7;
+}
+
+void GetParameters_Slit(Array<CompPar> *pars, Slit *comp) {
+    pars->Add( CompPar { CPT_FLOAT, "xmin", &comp->xmin } );
+    pars->Add( CompPar { CPT_FLOAT, "xmax", &comp->xmax } );
+    pars->Add( CompPar { CPT_FLOAT, "ymin", &comp->ymin } );
+    pars->Add( CompPar { CPT_FLOAT, "ymax", &comp->ymax } );
+    pars->Add( CompPar { CPT_FLOAT, "radius", &comp->radius } );
+    pars->Add( CompPar { CPT_FLOAT, "xwidth", &comp->xwidth } );
+    pars->Add( CompPar { CPT_FLOAT, "yheight", &comp->yheight } );
+}
+
 void Init_Slit(Slit *comp, Instrument *instrument) {
 
     #define xmin comp->xmin

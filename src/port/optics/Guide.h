@@ -42,6 +42,24 @@ Guide Create_Guide(s32 index, char *name) {
     return _comp;
 }
 
+int GetParameterCount_Guide() {
+    return 11;
+}
+
+void GetParameters_Guide(Array<CompPar> *pars, Guide *comp) {
+    pars->Add( CompPar { CPT_STRING, "reflect", comp->reflect } );
+    pars->Add( CompPar { CPT_FLOAT, "w1", &comp->w1 } );
+    pars->Add( CompPar { CPT_FLOAT, "h1", &comp->h1 } );
+    pars->Add( CompPar { CPT_FLOAT, "w2", &comp->w2 } );
+    pars->Add( CompPar { CPT_FLOAT, "h2", &comp->h2 } );
+    pars->Add( CompPar { CPT_FLOAT, "l", &comp->l } );
+    pars->Add( CompPar { CPT_FLOAT, "R0", &comp->R0 } );
+    pars->Add( CompPar { CPT_FLOAT, "Qc", &comp->Qc } );
+    pars->Add( CompPar { CPT_FLOAT, "alpha", &comp->alpha } );
+    pars->Add( CompPar { CPT_FLOAT, "m", &comp->m } );
+    pars->Add( CompPar { CPT_FLOAT, "W", &comp->W } );
+}
+
 void Init_Guide(Guide *comp, Instrument *instrument) {
 
     #define reflect comp->reflect
