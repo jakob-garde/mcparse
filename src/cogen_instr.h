@@ -152,10 +152,6 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
     StrBuffPrint1K(b, "InstrumentConfig InitAndConfig_%.*s(MArena *a_dest, u32 ncount) {\n", 2, instr->name.len, instr->name.str);
     StrBuffPrint1K(b, "    %.*s _spec = {};\n", 2, instr->name.len, instr->name.str);
     StrBuffPrint1K(b, "    %.*s *spec = (%.*s*) ArenaPush(a_dest, &_spec, sizeof(%.*s));\n", 6, instr->name.len, instr->name.str, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
-    StrBuffPrint1K(b, "\n", 0);
-    StrBuffPrint1K(b, "    // NOTE: mcncount must be fixed BEFORE initialization:\n", 0);
-    StrBuffPrint1K(b, "    //      This is used by API call mcget_ncount(), and called by some components during init (SourceMaxwell)\n", 0);
-    StrBuffPrint1K(b, "    mcset_ncount(ncount);\n", 0);
     StrBuffPrint1K(b, "\n\n    // initialize\n\n\n", 0);
 
 
@@ -177,6 +173,7 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
     StrBuffPrint1K(b, "    InstrumentConfig config = {};\n", 0);
     StrBuffPrint1K(b, "    config.scenegraph = SceneGraphInit(cbui.ctx->a_pers);\n", 0);
     StrBuffPrint1K(b, "    Instrument *instr = &config.instr;\n", 0);
+    StrBuffPrint1K(b, "    instr->ncount_target = ncount;\n", 0);
     StrBuffPrint1K(b, "    SceneGraphHandle *sg = &config.scenegraph;\n", 0);
     StrBuffPrint1K(b, "\n", 0);
     StrBuffPrint1K(b, "    instr->name = (char*) \"%.*s\";\n", 2, instr->name.len, instr->name.str);
