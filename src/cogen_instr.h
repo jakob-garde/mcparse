@@ -129,12 +129,31 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
     StrBuffPrint1K(b, "};\n\n\n", 0);
 
 
+    // parameter access
+    StrBuffPrint1K(b, "int GetParameterCount_%.*s() {\n", 2, instr->name.len, instr->name.str);
+    StrBuffPrint1K(b, "    return %u;\n", 2, instr->params.len);
+    StrBuffPrint1K(b, "}\n", 0);
+    StrBuffPrint1K(b, "void GetParameters_%.*s(Array<Param> *pars, %.*s *instr) {\n", 4, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
+    for (s32 j = 0; j < instr->params.len; ++j) {
+        Parameter p = instr->params.arr[j];
+
+        if (StrEqual(p.type, "string")) {
+            StrBuffPrint1K(b, "    pars->Add( Param { CPT_STRING, \"%.*s\", instr->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
+        }
+        else {
+            StrBuffPrint1K(b, "    pars->Add( Param { CPT_FLOAT, \"%.*s\", &instr->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
+        }
+        // TODO: vectors
+    }
+    StrBuffPrint1K(b, "}\n\n", 0);
+
+
     // signature
-    StrBuffPrint1K(b, "static %.*s %.*s_var;\n\n\n", 4, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
-    StrBuffPrint1K(b, "InstrumentConfig InitAndConfig_%.*s(MArena *a_dest, u32 ncount) {\n", 4, instr->name.len, instr->name.str);
-    StrBuffPrint1K(b, "    %.*s *spec = &%.*s_var;\n", 4, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
+    StrBuffPrint1K(b, "InstrumentConfig InitAndConfig_%.*s(MArena *a_dest, u32 ncount) {\n", 2, instr->name.len, instr->name.str);
+    StrBuffPrint1K(b, "    %.*s _spec = {};\n", 2, instr->name.len, instr->name.str);
+    StrBuffPrint1K(b, "    %.*s *spec = (%.*s*) ArenaPush(a_dest, &_spec, sizeof(%.*s));\n", 6, instr->name.len, instr->name.str, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
     StrBuffPrint1K(b, "\n", 0);
-    StrBuffPrint1K(b, "    // NOTE: mcncount must be set BEFORE initialization:\n", 0);
+    StrBuffPrint1K(b, "    // NOTE: mcncount must be fixed BEFORE initialization:\n", 0);
     StrBuffPrint1K(b, "    //      This is used by API call mcget_ncount(), and called by some components during init (SourceMaxwell)\n", 0);
     StrBuffPrint1K(b, "    mcset_ncount(ncount);\n", 0);
     StrBuffPrint1K(b, "\n\n    // initialize\n\n\n", 0);

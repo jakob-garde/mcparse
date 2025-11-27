@@ -277,11 +277,14 @@ int main (int argc, char **argv) {
         // get input
         char *comp_lib_path = NULL;
         char *instr_lib_path = NULL;
-        if (CLAContainsArg("--comps", argc, argv) || CLAContainsArg("--comp", argc, argv) || CLAContainsArg("-c", argc, argv)) {
+        if (CLAContainsArg("--comps", argc, argv) || CLAContainsArg("--comp", argc, argv)) {
             comp_lib_path = CLAGetArgValue("--comps", argc, argv);
         }
-        if (CLAContainsArg("--instrs", argc, argv) || CLAContainsArg("--instr", argc, argv) || CLAContainsArg("-i", argc, argv)) {
+        if (CLAContainsArg("--instrs", argc, argv) || CLAContainsArg("--instr", argc, argv)) {
             instr_lib_path = CLAGetArgValue("--instrs", argc, argv);
+        }
+        if (CLAContainsArg("--instr", argc, argv)) {
+            instr_lib_path = CLAGetArgValue("--instr", argc, argv);
         }
         if (argc > 1 && comp_lib_path == NULL && instr_lib_path == NULL) {
             comp_lib_path = argv[1];
