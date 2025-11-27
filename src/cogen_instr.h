@@ -296,6 +296,9 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
     StrBuffPrint1K(b, "    SceneGraphUpdate(sg);\n", 0);
     StrBuffPrint1K(b, "    UpdateLegacyTransforms(config.comps);\n", 0);
     StrBuffPrint1K(b, "\n", 0);
+    StrBuffPrint1K(b, "    instr->parameters = InitArray<Param>(a_dest, GetParameterCount_%.*s());\n", 2, instr->name.len, instr->name.str);
+    StrBuffPrint1K(b, "    GetParameters_%.*s(&instr->parameters, (%.*s*) instr);\n", 4, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
+    StrBuffPrint1K(b, "\n", 0);
     StrBuffPrint1K(b, "    return config;\n", 0);
     StrBuffPrint1K(b, "}\n\n\n", 0);
 
