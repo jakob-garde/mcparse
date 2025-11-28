@@ -140,6 +140,9 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
         if (StrEqual(p.type, "string")) {
             StrBuffPrint1K(b, "    pars->Add( Param { CPT_STRING, \"%.*s\", instr->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
         }
+        else if (StrEqual(p.type, "int")) {
+            StrBuffPrint1K(b, "    pars->Add( Param { CPT_INT, \"%.*s\", &instr->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
+        }
         else {
             StrBuffPrint1K(b, "    pars->Add( Param { CPT_FLOAT, \"%.*s\", &instr->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
         }
@@ -148,8 +151,10 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
     StrBuffPrint1K(b, "}\n\n", 0);
 
 
-    // signature
-    StrBuffPrint1K(b, "InstrumentConfig InitAndConfig_%.*s(MArena *a_dest, u32 ncount) {\n", 2, instr->name.len, instr->name.str);
+    //
+    // init function  signature
+
+    StrBuffPrint1K(b, "Array<Component*> InitAndConfig_%.*s(MArena *a_dest, Instrument *instr, SceneGraphHandle *sg, u32 ncount) {\n", 2, instr->name.len, instr->name.str);
     StrBuffPrint1K(b, "    %.*s _spec = {};\n", 2, instr->name.len, instr->name.str);
     StrBuffPrint1K(b, "    %.*s *spec = (%.*s*) ArenaPush(a_dest, &_spec, sizeof(%.*s));\n", 6, instr->name.len, instr->name.str, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
     StrBuffPrint1K(b, "\n\n    // initialize\n\n\n", 0);
@@ -170,14 +175,7 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
 
     // "trace" e.g. configure & initialize components
     StrBuffPrint1K(b, "    // configuration pre-amble\n\n\n", 0);
-    StrBuffPrint1K(b, "    InstrumentConfig config = {};\n", 0);
-    StrBuffPrint1K(b, "    config.scenegraph = SceneGraphInit(cbui.ctx->a_pers);\n", 0);
-    StrBuffPrint1K(b, "    Instrument *instr = &config.instr;\n", 0);
-    StrBuffPrint1K(b, "    instr->ncount_target = ncount;\n", 0);
-    StrBuffPrint1K(b, "    SceneGraphHandle *sg = &config.scenegraph;\n", 0);
-    StrBuffPrint1K(b, "\n", 0);
-    StrBuffPrint1K(b, "    instr->name = (char*) \"%.*s\";\n", 2, instr->name.len, instr->name.str);
-    StrBuffPrint1K(b, "    config.comps = InitArray<Component*>(a_dest, 32);\n", 0);
+    StrBuffPrint1K(b, "    Array<Component*> comps = InitArray<Component*>(a_dest, 32);\n", 0);
     StrBuffPrint1K(b, "    f32 at_x, at_y, at_z;\n", 0);
     StrBuffPrint1K(b, "    f32 phi_x, phi_y, phi_z;\n", 0);
     StrBuffPrint1K(b, "    s32 index = 0;\n", 0);
@@ -188,7 +186,7 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
         ComponentCall c = instr->comps.arr[i];
 
         StrBuffPrint1K(b, "    Component *%.*s = CreateComponent(a_dest, CT_%.*s, index++, \"%.*s\");\n", 6, c.name.len, c.name.str, c.type.len, c.type.str, c.name.len, c.name.str);
-        StrBuffPrint1K(b, "    config.comps.Add(%.*s);\n", 2, c.name.len, c.name.str);
+        StrBuffPrint1K(b, "    comps.Add(%.*s);\n", 2, c.name.len, c.name.str);
         StrBuffPrint1K(b, "    %.*s *%.*s_comp = (%.*s*) %.*s->comp;\n", 8, c.type.len, c.type.str, c.name.len, c.name.str, c.type.len, c.type.str, c.name.len, c.name.str);
 
 
@@ -290,13 +288,11 @@ void CogenInstrumentConfig(StrBuff *b, InstrumentParse *instr) {
         }
         StrBuffPrint1K(b, "\n", 0);
     }
-    StrBuffPrint1K(b, "    SceneGraphUpdate(sg);\n", 0);
-    StrBuffPrint1K(b, "    UpdateLegacyTransforms(config.comps);\n", 0);
     StrBuffPrint1K(b, "\n", 0);
     StrBuffPrint1K(b, "    instr->parameters = InitArray<Param>(a_dest, GetParameterCount_%.*s());\n", 2, instr->name.len, instr->name.str);
-    StrBuffPrint1K(b, "    GetParameters_%.*s(&instr->parameters, (%.*s*) instr);\n", 4, instr->name.len, instr->name.str, instr->name.len, instr->name.str);
+    StrBuffPrint1K(b, "    GetParameters_%.*s(&instr->parameters, spec);\n", 2, instr->name.len, instr->name.str);
     StrBuffPrint1K(b, "\n", 0);
-    StrBuffPrint1K(b, "    return config;\n", 0);
+    StrBuffPrint1K(b, "    return comps;\n", 0);
     StrBuffPrint1K(b, "}\n\n\n", 0);
 
 
