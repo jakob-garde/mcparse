@@ -150,6 +150,9 @@ void CogenComponent(StrBuff *b, ComponentParse *comp) {
         if (StrEqual(p.type, "string")) {
             StrBuffPrint1K(b, "    pars->Add( Param { CPT_STRING, \"%.*s\", comp->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
         }
+        else if (StrEqual(p.type, "int")) {
+            StrBuffPrint1K(b, "    pars->Add( Param { CPT_INT, \"%.*s\", &comp->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
+        }
         else {
             StrBuffPrint1K(b, "    pars->Add( Param { CPT_FLOAT, \"%.*s\", &comp->%.*s } );\n", 4, p.name.len, p.name.str, p.name.len, p.name.str);
         }
